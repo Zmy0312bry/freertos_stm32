@@ -24,3 +24,13 @@
 # 清理构建文件
 ./run.sh clean
 ```
+
+# 增加Utils部分
+
+在`cmake\smartcar`目录下的CMakeLists.txt下增加
+```cmake
+target_sources(smartcar INTERFACE
+    ../../Utils/motor.c   # 增加相应的.c文件
+)
+```
+在`Utils/`下创建控制模块
