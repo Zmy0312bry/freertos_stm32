@@ -22,8 +22,11 @@
 #include "task.h"
 #include "main.h"
 #include "../../Utils/Inc/motor.h"
-#include "cmsis_os.h"
+#ifdef _WIN32
 #include "cmsis_os2.h"
+#endif
+#include "cmsis_os.h"
+
 
 
 
