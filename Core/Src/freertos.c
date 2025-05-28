@@ -21,9 +21,11 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "main.h"
+#include "../../Utils/Inc/motor.h"
 #include "cmsis_os.h"
 #include "cmsis_os2.h"
-#include "../../Utils/Inc/motor.h" 
+
+
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -59,9 +61,9 @@ const osThreadAttr_t motorControl_attributes = {
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
 const osThreadAttr_t defaultTask_attributes = {
-    .name = "defaultTask",
-    .stack_size = 128 * 4,
-    .priority = (osPriority_t)osPriorityNormal,
+  .name = "defaultTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
 };
 
 /* Private function prototypes -----------------------------------------------*/
@@ -76,12 +78,11 @@ void StartDefaultTask(void *argument);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /**
- * @brief  FreeRTOS initialization
- * @param  None
- * @retval None
- */
-void MX_FREERTOS_Init(void)
-{
+  * @brief  FreeRTOS initialization
+  * @param  None
+  * @retval None
+  */
+void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
 
   /* USER CODE END Init */
@@ -116,6 +117,7 @@ void MX_FREERTOS_Init(void)
   motorControlTaskHandle = osThreadNew(MotorControlTask, NULL, &motorControl_attributes);
 
   /* USER CODE END RTOS_EVENTS */
+
 }
 
 /* USER CODE BEGIN Header_StartDefaultTask */
@@ -140,25 +142,26 @@ void StartDefaultTask(void *argument)
 /* USER CODE BEGIN Application */
 void MotorControlTask(void *argument)
 {
-  // 电机控制初始化
+  // 电机控制初始�?
   Motor_Init();
 
   uint8_t dutyCycle = 0;
 
   for (;;)
   {
-    // 增加占空比，超过100%后归零
+    // 增加占空比，超过100%后归�?
     dutyCycle = (dutyCycle + 20) % 120;
     if (dutyCycle > 100)
     {
       dutyCycle = 0;
     }
 
-    // 设置电机占空比
+    // 设置电机占空�?
     Motor_SetDutyCycle(dutyCycle);
 
-    // 等待3秒
+    // 等待3�?
     osDelay(3000);
   }
 }
 /* USER CODE END Application */
+
