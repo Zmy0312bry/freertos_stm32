@@ -21,8 +21,12 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "main.h"
-#include "cmsis_os.h"
+
+#ifdef _WIN32
 #include "cmsis_os2.h"
+#else
+#include "cmsis_os.h"
+#endif
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
