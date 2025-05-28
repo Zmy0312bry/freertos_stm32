@@ -44,3 +44,6 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
 )
 ```
 
+# 引脚图
+以下是STM32F103C8T6引脚图
+![](./C8T6引脚图.png)
