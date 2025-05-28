@@ -3,6 +3,7 @@
 #define MOTOR_H
 
 #include "main.h"
+#include <stdint.h>
 
 // 电机控制状态枚举
 typedef enum {
