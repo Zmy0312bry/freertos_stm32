@@ -25,7 +25,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "../../Utils/Inc/ssd1306.h"
+#include "../../Utils/Inc/motor.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -93,7 +94,10 @@ int main(void)
   MX_TIM1_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-
+  // oled屏幕初始�??
+  ssd1306_Init();
+  ssd1306_Fill(White);
+  ssd1306_UpdateScreen();
   /* USER CODE END 2 */
 
   /* Init scheduler */

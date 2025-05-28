@@ -21,22 +21,34 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "main.h"
-#include "../../Utils/Inc/motor.h"
-#ifdef _WIN32
-#include "cmsis_os2.h"
-#endif
 #include "cmsis_os.h"
-
-
-
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "../../Utils/Inc/motor.h"
+#include "../../Utils/Inc/ssd1306.h"
+#include "../../Utils/Inc/ssd1306_fonts.h"
+#include <stdio.h>
+#include "cmsis_os2.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+
+osThreadId_t motorControlTaskHandle;
+const osThreadAttr_t motorControl_attributes = {
+    .name = "motorControl",
+    .stack_size = 128 * 4,
+    .priority = (osPriority_t)osPriorityNormal,
+};
+
+// OLED显示任务句柄
+osThreadId_t displayTaskHandle;
+const osThreadAttr_t display_attributes = {
+    .name = "displayTask",
+    .stack_size = 128 * 4,
+    .priority = (osPriority_t)osPriorityNormal,
+};
 
 /* USER CODE END PTD */
 
@@ -53,12 +65,8 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 
-osThreadId_t motorControlTaskHandle;
-const osThreadAttr_t motorControl_attributes = {
-    .name = "motorControl",
-    .stack_size = 128 * 4,
-    .priority = (osPriority_t)osPriorityNormal,
-};
+// 电机占空比全�???变量
+volatile uint8_t dutyCycle = 0;
 
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
@@ -73,6 +81,7 @@ const osThreadAttr_t defaultTask_attributes = {
 /* USER CODE BEGIN FunctionPrototypes */
 
 void MotorControlTask(void *argument);
+void DisplayTask(void *argument);
 
 /* USER CODE END FunctionPrototypes */
 
@@ -117,6 +126,7 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_EVENTS */
   /* add events, ... */
 
+  displayTaskHandle = osThreadNew(DisplayTask, NULL, &display_attributes);
   motorControlTaskHandle = osThreadNew(MotorControlTask, NULL, &motorControl_attributes);
 
   /* USER CODE END RTOS_EVENTS */
@@ -145,25 +155,58 @@ void StartDefaultTask(void *argument)
 /* USER CODE BEGIN Application */
 void MotorControlTask(void *argument)
 {
-  // 电机控制初始�?
+  // 电机控制初始
   Motor_Init();
-
-  uint8_t dutyCycle = 0;
 
   for (;;)
   {
-    // 增加占空比，超过100%后归�?
+    // 增加占空比，超过100%后归0
     dutyCycle = (dutyCycle + 20) % 120;
     if (dutyCycle > 100)
     {
       dutyCycle = 0;
     }
 
-    // 设置电机占空�?
+    // 设置电机占空�???
     Motor_SetDutyCycle(dutyCycle);
 
-    // 等待3�?
+    // 等待3s
     osDelay(3000);
+  }
+}
+
+void DisplayTask(void *argument)
+{
+  // 缓冲区用于字符串格式�???
+  char str[16];
+  
+  // 确保OLED已经初始�???
+  // 清屏
+  ssd1306_Fill(Black);
+  ssd1306_UpdateScreen();
+  
+  // 显示标题
+  ssd1306_SetCursor(0, 0);
+  ssd1306_WriteString("Show Variable", Font_7x10, White);
+  
+  for(;;)
+  {
+    // 清除显示区域（保留标题）
+    ssd1306_FillRectangle(0, 16, 128, 64, Black);
+    
+    // 格式化变量�?�到字符�???
+    snprintf(str, sizeof(str), "Value: %d", dutyCycle);
+    
+    // 设置光标并显�???
+    ssd1306_SetCursor(10, 25);
+    ssd1306_WriteString(str, Font_11x18, White);
+    
+    // 更新屏幕
+    ssd1306_UpdateScreen();
+    
+    
+    // �???500ms更新�???�???
+    osDelay(500);
   }
 }
 /* USER CODE END Application */
