@@ -29,14 +29,7 @@ if [ -d "$BUILD_DIR" ]; then
     BUILD_DIR_WIN=$(cygpath -w "$BUILD_DIR")
     echo "Running on Windows, converted path: $BUILD_DIR_WIN"
     
-    # 使用Windows命令清理目录
-    cmd.exe /c "rmdir /s /q \"$BUILD_DIR_WIN\"" > nul 2>&1
-    
-    # 检查清理是否成功
-    if [ -d "$BUILD_DIR" ]; then
-      echo "Windows rmdir failed, falling back to rm -rf"
-      rm -rf "$BUILD_DIR"
-    fi
+    rm -rf "$BUILD_DIR"
   else
     # 在Linux/macOS上直接使用rm -rf
     rm -rf "$BUILD_DIR"
