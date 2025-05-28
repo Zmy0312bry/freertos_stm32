@@ -34,3 +34,13 @@ target_sources(smartcar INTERFACE
 )
 ```
 在`Utils/`下创建控制模块
+
+在根目录下的CMakeLists.txt下修改如下
+```diff
+target_link_libraries(${CMAKE_PROJECT_NAME}
+    stm32cubemx
++   smartcar
+    # Add user defined libraries
+)
+```
+
