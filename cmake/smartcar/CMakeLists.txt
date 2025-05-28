@@ -7,7 +7,7 @@ add_library(smartcar INTERFACE)
 enable_language(C ASM)
 
 target_compile_definitions(smartcar INTERFACE 
-	USE_HAL_DRIVER 
+	USE_HAL_DRIVER
 	STM32F103xB
     $<$<CONFIG:Debug>:DEBUG>
 )
@@ -18,13 +18,12 @@ target_include_directories(smartcar INTERFACE
 
 target_sources(smartcar INTERFACE
     ../../Utils/Src/motor.c
+    # ../../Utils/Src/ps2.c
 )
 
-target_link_directories(smartcar INTERFACE
-)
+target_link_directories(smartcar INTERFACE)
 
-target_link_libraries(smartcar INTERFACE
-)
+target_link_libraries(smartcar INTERFACE)
 
 # Validate that STM32CubeMX code is compatible with C standard
 if(CMAKE_C_STANDARD LESS 11)
